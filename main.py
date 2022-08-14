@@ -33,7 +33,7 @@ async def join(ctx):
             await ctx.send("you are added to waiting list. Thank you for your patience :heart:")
         else:
             print(f"{a.author} : {user.author}")
-            a_name = user_name = "Stanger"
+            a_name = user_name = "someone"
             if len(c.execute("select hash from incog where hash == ?",(hash(a.author.id),)).fetchall())==1:
                 a_name = c.execute(f"select incog_name from incog where hash == {hash(a.author.id)}").fetchone()[0]
             if len(c.execute("select hash from incog where hash == ?",(hash(user.author.id),)).fetchall())==1:
@@ -47,12 +47,15 @@ async def join(ctx):
                     continue
                 if msg.content.startswith("!"):
                    if msg.content == "!leave":
-                        await a.author.send("Chat Ended")
-                        a.leave()
-                        await user.author.send("Chat Ended")
-                        user.leave()
-                        del a, user
-                        break
+                        if msg.author == a.author or msg.author == user.author:
+                           a.leave()
+                           await a.author.send("Chat Ended")
+                           user.leave()
+                           await user.author.send("Chat Ended")
+                           del a, user
+                        #    print(a)
+                           break
+
                 if msg.content[1:] in commands_list:
                    continue
 
@@ -61,7 +64,8 @@ async def join(ctx):
                         await user.author.send(f"** ☎️ {a_name}**: {msg.content}")
                     else:
                         await a.author.send(f"**☎️ {user_name}**: {msg.content}")
-
+    else:
+        await ctx.author.send("you are active in chat with someone. or you are in waiting queue. pls wait. :heart:")
 @client.command()
 async def leave(ctx):
     pass
@@ -91,7 +95,7 @@ async def anonymous(ctx, *args):
 
 @client.command()
 async def test(ctx):
-    x = ctx.author.send("STOP messaging me.")
+    x = ctx.author.id.send("STOP messaging me.")
     if f"{ctx.author}" == f"{ctx.channel}".split(" ")[-1]:
         await x
         return

@@ -1,17 +1,15 @@
-import asyncio
-
 class Chatbox:
-    # global users_list
+    global users_list
     global waiting_state
     global running_state
 
-    # users_list = []
+    users_list = []
     waiting_state = []
     running_state = []
 
     def __init__(self, author):
         self.author = author
-        # users_list.append(self)
+        users_list.append(self.author.id)
         self.waiting_status = True
         self.running_status = False
         self.connected_to = None
@@ -29,7 +27,9 @@ class Chatbox:
             return "waiting."
 
     def leave(self):
+        print(users_list)
         self.del_from_running_state()
+        users_list.remove(self.author.id)
         print("Chat ended.")
 
     def next(self):
@@ -45,7 +45,7 @@ class Chatbox:
         pass
 
     def check(author):
-        return author in waiting_state or author in running_state
+        return author.id in users_list
 
     #def present(self):
         if self in waiting_state:
