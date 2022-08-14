@@ -1,3 +1,4 @@
+from asyncio import wait_for
 import discord
 from discord.ext import commands
 from discord.utils import get
@@ -58,14 +59,17 @@ async def join(ctx):
 
                 if msg.content[1:] in commands_list:
                    continue
-
+                message = msg.content
+                if msg.attachments:
+                    message = msg.attachments[0].url
                 if msg.author == a.author or msg.author == user.author:
                     if msg.author == a.author:
-                        await user.author.send(f"** ☎️ {a_name}**: {msg.content}")
+                        await user.author.send(f"** ☎️ {a_name}**: {message}")
                     else:
-                        await a.author.send(f"**☎️ {user_name}**: {msg.content}")
+                        await a.author.send(f"**☎️ {user_name}**: {message}")
     else:
         await ctx.author.send("you are active in chat with someone. or you are in waiting queue. pls wait. :heart:")
+
 @client.command()
 async def leave(ctx):
     pass
@@ -95,11 +99,12 @@ async def anonymous(ctx, *args):
 
 @client.command()
 async def test(ctx):
-    x = ctx.author.id.send("STOP messaging me.")
-    if f"{ctx.author}" == f"{ctx.channel}".split(" ")[-1]:
-        await x
-        return
-    y = ctx.send('WORKING.')
-    await x and await y
+    pass
+    # x = ctx.author.id.send("STOP messaging me.")
+    # if f"{ctx.author}" == f"{ctx.channel}".split(" ")[-1]:
+        # await x
+        # return
+    # y = ctx.send('WORKING.')
+    # await x and await y
 
 client.run('MTAwMzMzMzY1MTMwOTgwOTc5Ng.GNKisO.BIK6kKUVAJ_Xe0BxnMEGGxB8F2jHGcTCbXsdIs')
