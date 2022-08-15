@@ -32,6 +32,12 @@ class Chatbox:
         users_list.remove(self.author.id)
         print("Chat ended.")
 
+    def live():
+        return len(users_list)
+
+    def create_message():
+        pass
+
     def next(self):
         pass
 

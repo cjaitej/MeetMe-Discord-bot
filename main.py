@@ -1,15 +1,13 @@
-from asyncio import wait_for
 import discord
 from discord.ext import commands
-from discord.utils import get
 from Chatbox import Chatbox
 import sqlite3
-
+import time
+from random import choice
 prefix = "!"
 client = commands.Bot(command_prefix=prefix)
 
 commands_list = []
-
 conn = sqlite3.connect("database.db")
 c = conn.cursor()
 print("Database loaded successfully.")
@@ -39,40 +37,71 @@ async def join(ctx):
                 a_name = c.execute(f"select incog_name from incog where hash == {hash(a.author.id)}").fetchone()[0]
             if len(c.execute("select hash from incog where hash == ?",(hash(user.author.id),)).fetchall())==1:
                 user_name = c.execute(f"select incog_name from incog where hash == {hash(user.author.id)}").fetchone()[0]
-            await user.author.send(f"You are connected to **{a_name}** :heart:")
-            await ctx.send(f"you are connected to **{user_name}** :heart:")
 
+
+            user_msg = discord.Embed(title="_WELCOME TO CHATBOT :heart:_", description="", color= 0x2ecc71)
+            a_msg = discord.Embed(title="_WELCOME TO CHATBOT :heart:_ ", description="", color= 0x2ecc71)
+
+            user_msg_edit = await user.author.send(embed=user_msg)
+            a_msg_edit = await a.author.send(embed=a_msg)
+            desc = ""
             while a.running_status and user.running_status:
                 msg = await client.wait_for("message")
                 if not isinstance(msg.channel, discord.channel.DMChannel):
                     continue
                 if msg.content.startswith("!"):
-                   if msg.content == "!leave":
+                    if msg.content == "!leave":
                         if msg.author == a.author or msg.author == user.author:
                            a.leave()
                            await a.author.send("Chat Ended")
                            user.leave()
                            await user.author.send("Chat Ended")
                            del a, user
-                        #    print(a)
                            break
+                    continue
 
-                if msg.content[1:] in commands_list:
-                   continue
-                message = msg.content
-                if msg.attachments:
-                    message = msg.attachments[0].url
+                # if msg.content[1:] in commands_list:
+                #    continue
+
                 if msg.author == a.author or msg.author == user.author:
-                    if msg.author == a.author:
-                        await user.author.send(f"** ☎️ {a_name}**: {message}")
+                    message = msg.content
+                    if msg.attachments:
+                        pass
+                        # message = msg.attachments[0].url
+                        # if msg.author == a.author:
+                            # await user.author.send(f"**{a_name}**: {message}")
+                        # else:
+                            # await a.author.send(f"**{user_name}**: {message}")
                     else:
-                        await a.author.send(f"**☎️ {user_name}**: {message}")
+                        if msg.author == a.author:
+                            desc = desc + f"\n `{a_name}`: {message}"
+                            # desc = desc + f"\n `**{a_name}**`: {message}"
+
+                        else:
+                            desc = desc + f"\n`{user_name}`: {message}"
+                            # desc = desc + f"\n`**{user_name}**`: {message}"
+
+                        user_msg = discord.Embed(title="_WELCOME TO CHATBOT :heart:_", description=desc, color= 0x2ecc71)
+                        # a_msg = discord.Embed(title="_WELCOME TO CHATBOT :heart:_ ", description=desc_a, color= choice(colors))
+
+                        temp = await user.author.send(embed=user_msg)
+                        await user_msg_edit.delete()
+                        user_msg_edit = temp
+
+                        temp = await a.author.send(embed=user_msg)
+                        await a_msg_edit.delete()
+                        a_msg_edit = temp
+
     else:
         await ctx.author.send("you are active in chat with someone. or you are in waiting queue. pls wait. :heart:")
 
 @client.command()
 async def leave(ctx):
     pass
+
+@client.command()
+async def live(ctx):
+    await ctx.send(f"live: {Chatbox.live()}")
 
 @client.command()
 async def next(ctx):
@@ -99,7 +128,13 @@ async def anonymous(ctx, *args):
 
 @client.command()
 async def test(ctx):
-    pass
+    embedVar = discord.Embed(title="_WELCOME TO CHATBOT :heart:_", description="**Hi ra **\npukka", color= choice(colors))
+    embedVar1 = discord.Embed(description="**Hi ra ** \n hehe sorry!")
+    # embedVar.add_field(name="Field1", value="hi", inline=False)
+    # embedVar.add_field(name="Field2", value="hi2", inline=False)
+    msg = await ctx.send(embed=embedVar)
+    time.sleep(1)
+    await msg.edit(embed=embedVar1)
     # x = ctx.author.id.send("STOP messaging me.")
     # if f"{ctx.author}" == f"{ctx.channel}".split(" ")[-1]:
         # await x
