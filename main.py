@@ -129,4 +129,4 @@ async def test(ctx):
     # y = ctx.send('WORKING.')
     # await x and await y
 
-client.run('MTAwMzMzMzY1MTMwOTgwOTc5Ng.GNKisO.BIK6kKUVAJ_Xe0BxnMEGGxB8F2jHGcTCbXsdIs')
+client.run('token_id')
