@@ -50,6 +50,9 @@ async def join(ctx):
                 if not isinstance(msg.channel, discord.channel.DMChannel):
                     continue
                 if msg.content.startswith("!"):
+                    if msg.content == "!next":
+                        pass
+
                     if msg.content == "!leave":
                         if msg.author == a.author or msg.author == user.author:
                            a.leave()
@@ -94,22 +97,6 @@ async def join(ctx):
 
     else:
         await ctx.author.send("you are active in chat with someone. or you are in waiting queue. pls wait. :heart:")
-
-@client.command()
-async def leave(ctx):
-    pass
-
-@client.command()
-async def live(ctx):
-    await ctx.send(f"live: {Chatbox.live()}")
-
-@client.command()
-async def next(ctx):
-    pass
-
-@client.command()
-async def report(ctx):     #maybe this will be changed to button!
-    pass
 
 @client.command(aliases = ("fake", "incog"))
 async def anonymous(ctx, *args):

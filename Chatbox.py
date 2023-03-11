@@ -32,33 +32,8 @@ class Chatbox:
         users_list.remove(self.author.id)
         print("Chat ended.")
 
-    def live():
-        return len(users_list)
-
-    def create_message():
-        pass
-
-    def next(self):
-        pass
-
-    def report(self):
-        pass
-
-    def anonymous(self):
-        pass
-
-    def interface(self):
-        pass
-
     def check(author):
         return author.id in users_list
-
-    #def present(self):
-        if self in waiting_state:
-            return "You are already in waiting Queue. Thanks for your patience :heart:"
-
-        if self in running_state:
-            return f"you are already in chat with {self.connected_to}."
 
     def connect(self):
         if len(waiting_state) == 0:
